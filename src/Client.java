@@ -12,8 +12,8 @@ public class Client implements Runnable{
     @Override
     public void run() {
         try {
-            frontSystemBank.addRequest(request);
             System.out.printf("%s: Заявка %s отправлена в банк%n", clientThreadName, request);
+            frontSystemBank.addRequest(request);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

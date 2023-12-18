@@ -9,7 +9,6 @@ public class Main {
                 frontSystemBank, backSystemBank));
         Thread processorRequest2 = new Thread(new ProcessorRequest("Обработчик заявок №2",
                 frontSystemBank, backSystemBank));
-
         Thread client1 = new Thread(new Client("Клиент №1",
                 new Request("Клиент №1", 10000, OperationType.REPAYMENT), frontSystemBank));
         Thread client2 = new Thread(new Client("Клиент №2",
@@ -20,7 +19,6 @@ public class Main {
                 new Request("Клиент №4", 5000, OperationType.CREDIT), frontSystemBank));
         Thread client5 = new Thread(new Client("Клиент №5",
                 new Request("Клиент №5", 15000, OperationType.CREDIT), frontSystemBank));
-
 
         client1.start();
         client2.start();

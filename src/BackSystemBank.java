@@ -30,6 +30,7 @@ public class BackSystemBank {
         while (balance - amount < 0) {
             System.out.printf("БЭК система: Заявка %s НЕ ВЫПОЛНЕНА. Получена от %s. Сумма больше баланса банка. Баланс банка = %d\n",
                     request, nameProcessor, balance);
+            return;
         }
         balance -= amount;
         System.out.printf("БЭК система: Заявка %s УСПЕШНО ВЫПОЛНЕНА. Получена от %s. Баланс банка = %d\n",
