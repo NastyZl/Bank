@@ -1,11 +1,19 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        BackSystemBank backSystemBank = new BackSystemBank( 0);
+        BackSystemBank backSystemBank = new BackSystemBank();
         FrontSystemBank frontSystemBank = new FrontSystemBank();
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
-        ExecutorService executorService1 = Executors.newCachedThreadPool();
+        ExecutorService executorDopSystemBank = Executors.newFixedThreadPool(3);
+        ExecutorService executorProcessor = Executors.newFixedThreadPool(2);
+        ExecutorService executorClient = Executors.newCachedThreadPool();
+
+        List<BackSystemTimeOut> backSystemTimeOuts = new ArrayList<>();
+        backSystemTimeOuts.add( new BackSystemTimeOut(5000,5000));
+        backSystemTimeOuts.add( new BackSystemTimeOut(7000,7000));
+        backSystemTimeOuts.add( new BackSystemTimeOut(10000,10000));
 
         ProcessorRequest processorRequest1 = new ProcessorRequest("Обработчик заявок №1",
                 frontSystemBank, backSystemBank);
@@ -23,15 +31,21 @@ public class Main {
         Client client5 = new Client("Клиент №5",
                 new Request("Клиент №5", 15000, OperationType.CREDIT), frontSystemBank);
 
-        executorService.submit(processorRequest1);
-        executorService.submit(processorRequest2);
+        try {
+            executorDopSystemBank.invokeAll(backSystemTimeOuts);
+        } catch (InterruptedException e) {
+            throw new RuntimeException();
+        }
 
-        executorService1.submit(client1);
-        executorService1.submit(client2);
-        executorService1.submit(client3);
-        executorService1.submit(client4);
-        executorService1.submit(client5);
+        executorDopSystemBank.shutdown();
 
+        executorProcessor.submit(processorRequest1);
+        executorProcessor.submit(processorRequest2);
 
+        executorClient.submit(client1);
+        executorClient.submit(client2);
+        executorClient.submit(client3);
+        executorClient.submit(client4);
+        executorClient.submit(client5);
     }
 }
