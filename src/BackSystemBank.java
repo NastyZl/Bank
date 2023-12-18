@@ -1,5 +1,6 @@
-public class BackSystemBank {
+import java.util.concurrent.atomic.AtomicLong;
 
+public class BackSystemBank {
     private long balance;
 
     public BackSystemBank(long balance) {
