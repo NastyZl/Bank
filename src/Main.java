@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         BackSystemBank backSystemBank = new BackSystemBank();
         FrontSystemBank frontSystemBank = new FrontSystemBank();
         ExecutorService executorDopSystemBank = Executors.newFixedThreadPool(3);
