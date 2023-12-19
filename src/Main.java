@@ -7,13 +7,12 @@ public class Main {
         BackSystemBank backSystemBank = new BackSystemBank();
         FrontSystemBank frontSystemBank = new FrontSystemBank();
         ExecutorService executorDopSystemBank = Executors.newFixedThreadPool(3);
-        ExecutorService executorProcessor = Executors.newFixedThreadPool(2);
-        ExecutorService executorClient = Executors.newCachedThreadPool();
+        ExecutorService executorSystem = Executors.newCachedThreadPool();
 
         List<BackSystemTimeOut> backSystemTimeOuts = new ArrayList<>();
-        backSystemTimeOuts.add( new BackSystemTimeOut(5000,5000));
-        backSystemTimeOuts.add( new BackSystemTimeOut(7000,7000));
-        backSystemTimeOuts.add( new BackSystemTimeOut(10000,10000));
+        backSystemTimeOuts.add( new BackSystemTimeOut(5000,5000, backSystemBank));
+        backSystemTimeOuts.add( new BackSystemTimeOut(7000,7000, backSystemBank));
+        backSystemTimeOuts.add( new BackSystemTimeOut(10000,10000, backSystemBank));
 
         ProcessorRequest processorRequest1 = new ProcessorRequest("Обработчик заявок №1",
                 frontSystemBank, backSystemBank);
@@ -33,19 +32,20 @@ public class Main {
 
         try {
             executorDopSystemBank.invokeAll(backSystemTimeOuts);
+            backSystemBank.getBalance();
         } catch (InterruptedException e) {
             throw new RuntimeException();
         }
 
         executorDopSystemBank.shutdown();
 
-        executorProcessor.submit(processorRequest1);
-        executorProcessor.submit(processorRequest2);
+        executorSystem.submit(processorRequest1);
+        executorSystem.submit(processorRequest2);
 
-        executorClient.submit(client1);
-        executorClient.submit(client2);
-        executorClient.submit(client3);
-        executorClient.submit(client4);
-        executorClient.submit(client5);
+        executorSystem.submit(client1);
+        executorSystem.submit(client2);
+        executorSystem.submit(client3);
+        executorSystem.submit(client4);
+        executorSystem.submit(client5);
     }
 }

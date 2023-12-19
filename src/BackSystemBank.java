@@ -1,12 +1,9 @@
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class BackSystemBank {
-    List<BackSystemTimeOut> backSystemTimeOuts;
-    private AtomicLong balance;
-
-    public BackSystemBank() {
-
+    private final AtomicLong balance = new AtomicLong(0);
+    public void getBalance() {
+        System.out.println("Общий баланс банка - " + balance);
     }
 
     public void processRequest(Request request, String nameProcessor) {
@@ -23,9 +20,9 @@ public class BackSystemBank {
         }
     }
     public void increase(Request request, String nameProcessor) {
-        long balanceUpdate = balance.getAndUpdate(a -> request.getAmount() + a);
+        this.balance.getAndUpdate(a -> request.getAmount() + a);
         System.out.printf("БЭК система: Заявка %s УСПЕШНО ВЫПОЛНЕНА. Получена от %s. Баланс банка = %d\n",
-                request, nameProcessor, balanceUpdate);
+                request, nameProcessor, balance.get());
     }
 
     public void decrease(Request request, String nameProcessor) {
@@ -35,8 +32,13 @@ public class BackSystemBank {
                     request, nameProcessor, balance.get());
             return;
         }
-        long balanceUpdate = balance.getAndUpdate(a -> a-amount);
+        balance.getAndUpdate(a -> a-amount);
         System.out.printf("БЭК система: Заявка %s УСПЕШНО ВЫПОЛНЕНА. Получена от %s. Баланс банка = %d\n",
-                request, nameProcessor, balanceUpdate);
+                request, nameProcessor, balance.get());
+    }
+
+    public void setBalance(long balance) {
+        this.balance.getAndUpdate(a -> balance + a);
+        System.out.printf("БЭК система: Баланс банка пополнен на %d и составляет = %d\n", balance, this.balance.get());
     }
 }

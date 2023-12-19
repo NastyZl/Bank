@@ -1,18 +1,24 @@
 import java.util.concurrent.Callable;
 
-public class BackSystemTimeOut  implements Callable<Long> {
+public class BackSystemTimeOut  implements Callable<Void> {
+    private final BackSystemBank backSystemBank;
     private final long balance;
     private final int sleepTime;
-    private BackSystemBank backSystemBank;
 
-    public BackSystemTimeOut(long balance, int sleepTime) {
+    public BackSystemTimeOut(long balance, int sleepTime, BackSystemBank backSystemBank) {
         this.balance = balance;
         this.sleepTime = sleepTime;
+        this.backSystemBank = backSystemBank;
+
     }
     @Override
-    public Long call() throws Exception {
-        Thread.sleep(sleepTime);
-       // backSystemBank
-        return balance;
+    public Void call() {
+        try {
+            Thread.sleep(sleepTime);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        backSystemBank.setBalance(balance);
+        return null;
     }
 }
